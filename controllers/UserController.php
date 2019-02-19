@@ -2,6 +2,7 @@
 
 class UserController {
 	public function actionRegister() {
+		User::isAuthorized();
 		$name = '';
 		$email = '';
 		$password = '';
@@ -42,10 +43,10 @@ class UserController {
 		}
 
 		require_once(ROOT.'/views/user/register.php');
-		return true;
 	}
 
 	public function actionLogin() {
+		User::isAuthorized();
 		$email = '';
 		$password = '';
 		$errors = false;
@@ -75,7 +76,6 @@ class UserController {
 		}
 
 		require_once(ROOT.'/views/user/login.php');
-		return true;
 	}
 
 	public function actionLogout() {
@@ -84,7 +84,6 @@ class UserController {
 
 		header("Location: /");
 
-		return true;
 	}
 
 	public function getRandomPassword($num) {
@@ -139,7 +138,6 @@ class UserController {
 		}
 
 		require_once(ROOT.'/views/user/restore.php');
-		return true;
 	}
 	
 }

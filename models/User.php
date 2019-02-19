@@ -89,24 +89,35 @@ class User {
 		//запысиваем в сессию id юзера
 		$_SESSION['user'] = $userId;
 	}
+
 	/**
 	*Проверка авторизирован ли пользователь
     */
 	public static function checkLogged() {
 		if(isset($_SESSION['user'])) {
 			return $_SESSION['user'];
+			
 		}
 
 		header("Location: /login");
 	}
 
+	public static function isAuthorized() {
+		if(!isset($_SESSION['user'])) {
+			return false;
+		}
+		header("Location: /cabinet");
+	}
 
+	
 	public static function isGuest() {
 		if(isset($_SESSION['user'])) {
 			return false;
 		}
 		return true;
 	}
+
+
 
 	/**
 	*Возвращает пользователя из БД по id

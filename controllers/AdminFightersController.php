@@ -16,7 +16,7 @@ class AdminFightersController extends AdminBase {
     }
 
     /**
-	* Action для удаление 'бойца'
+	* Action для удаления 'бойца'
     */
     public function actionDestroy($id) {
     	if($id) {
@@ -25,6 +25,7 @@ class AdminFightersController extends AdminBase {
     		//Редирект обратно
     		header("Location: ".$_SERVER['HTTP_REFERER']);
     	}
+
     }
 
     /**
