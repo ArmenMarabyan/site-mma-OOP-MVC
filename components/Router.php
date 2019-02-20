@@ -1,5 +1,6 @@
 <?php
 
+
 /**
 *Router - маршрутизация сайта
 */
@@ -35,7 +36,7 @@ class Router {
 			//если есть совпадение между тем что написал юзер и в массиве
 			if(preg_match("#^{$uriPattern}$#i", $uri)) {
 
-				$internalRoute = preg_replace("~$uriPattern~", $path, $uri);
+				$internalRoute = preg_replace("#$uriPattern#", $path, $uri);
 				//Разбиваем строку с помощью разделителя
 				$segments = explode('/', $internalRoute);
 				//получаем имя контроллера который будет обрабатывать запрос

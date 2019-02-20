@@ -10,7 +10,7 @@ class Comment {
 	public static function getCommentsList($id) {
     	$db = Db::getConnection();
 
-    	$sql = "SELECT id, name, user_comment, page_id, date FROM comments WHERE page_id = :id";
+    	$sql = "SELECT id, name, user_comment, page_id, date FROM comments WHERE page_id = :id ORDER BY id DESC";
 
     	$result = $db->prepare($sql);
     	$result->bindParam(':id', $id, PDO::PARAM_INT);
@@ -32,8 +32,22 @@ class Comment {
     	$result->bindParam(':name', $name, PDO::PARAM_STR);
     	$result->bindParam(':userComment', $userComment, PDO::PARAM_STR);
     	$result->bindParam(':page_id', $id, PDO::PARAM_INT);
+        $result->execute();
+    	return $db->lastInsertId();
+    }
 
-    	return $result->execute();
+    public static function getLastComment($lastCommentId, $page_id) {
+        //Соединение с БД
+        $db = Db::getConnection();
+        //текст запроса к БД
+        $sql = "SELECT id, name, user_comment, page_id, date FROM comments WHERE id = :id AND page_id = :page_id";
+
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $lastCommentId, PDO::PARAM_INT);
+        $result->bindParam(':page_id', $page_id, PDO::PARAM_INT);
+        $result->execute();
+
+        return $result->fetchAll();
     }
   
 }

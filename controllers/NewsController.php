@@ -30,39 +30,45 @@ class NewsController {
 			$latestNews = News::getLatestNews();
 			//получаем список комментариев к конкретной новости
 			$commentsList = Comment::getCommentsList($id);
-			
-
-			$errors = false;
-			$name = '';
-			$userComment = '';
-
-			//если отправлена форма комментариев
-			if(isset($_POST['submit'])) {
-				//получаем данные и валидируем от XSS атак
-				$name = trim(htmlspecialchars($_POST['name']));
-				$userComment = trim(htmlspecialchars($_POST['user_comment']));
-
-				//валидируем поля
-				if(!User::checkName($name)) {
-					$errors[] = 'Заполните поле Имя';
-				}
-
-				if($userComment == '') {
-					$errors[] = 'Пустое поле комментариев';
-				}
-
-				//если все ок
-				if(!$errors) {
-					//добавляем коммент в базу
-					Comment::createComment($id, $name, $userComment);
-					//реддирект обратно 
-					header("Location: ". $_SERVER['HTTP_REFERER']);
-				}
-			}
+		
 
 			require_once(ROOT.'/views/news/view.php');
 
 		}
 
+	}
+
+
+	public function actionAddComment($id) {
+		$errors = false;
+		$name = '';
+		$userComment = '';
+
+		if(isset($_POST["user_comment"]) && isset($_POST["name"])) {
+			$name = trim(htmlspecialchars($_POST['name']));
+			$userComment = trim(htmlspecialchars($_POST['user_comment']));
+
+			//валидируем поля
+			if(!User::checkName($name)) {
+				$errors[] = 'Заполните поле Имя';
+			}
+
+			if($userComment == '') {
+				$errors[] = 'Пустое поле комментариев';
+			}
+
+			//если все ок
+			if(!$errors) {
+				//добавляем коммент в базу и возвращаем его id
+				$lastCommentId = Comment::createComment($id, $name, $userComment);
+				//Получаем последний добавленный комментарий
+				$lastComment = Comment::getLastComment($lastCommentId, $id);
+
+				echo json_encode($lastComment);
+
+				//реддирект обратно 
+				// header("Location: ". $_SERVER['HTTP_REFERER']);
+			}
+		} 
 	}
 }

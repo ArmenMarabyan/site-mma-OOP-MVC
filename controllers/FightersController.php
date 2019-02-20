@@ -1,4 +1,5 @@
 <?php
+
 /**
 *FightersController - управление бойцами в админке
 */

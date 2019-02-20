@@ -1,7 +1,9 @@
 <?php
 
 return array(
+	'comment/addAjax/([0-9]+)' => 'news/addComment/$1',
 	'news/([0-9]+)' => 'news/view/$1',
+
 	
 	'fighters/page-([0-9]+)' => 'fighters/index/$1',
 	'fighters_search' => 'search/fighters',

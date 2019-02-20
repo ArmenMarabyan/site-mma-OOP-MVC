@@ -47,7 +47,7 @@
 						<?php endif ?>
 
 
-						<form class="form-horizontal" action="" method="post">
+						<form class="form-horizontal" action="" method="post" id="ajax_form">
 							<?php if (User::isGuest()): ?>
 								<div class="form-group">
 									<textarea name="user_comment" class="form-control" id="" cols="30" rows="5"></textarea>
@@ -68,15 +68,15 @@
 									?>
 									
 									<div class="form-group">
-										<textarea name="user_comment" class="form-control" id="" cols="30" rows="5"></textarea>
+										<textarea name="user_comment" class="form-control" id="user_comment" cols="30" rows="5"></textarea>
 									</div>
 
 									<div class="form-group">
-										<input type="text" name="name" class="form-control col-3" value="<?= $user['name']; ?>" placeholder="Имя">
+										<input type="text" name="name" id="name" class="form-control col-3" value="<?= $user['name']; ?>" placeholder="Имя">
 									</div>
 
 									<div class="form-group">
-										<input type="submit" class="btn btn-primary form-control col-3" id="add_comment" name="submit" value="Добавить">
+										<input type="submit" class="btn btn-primary form-control col-3" id="add_comment" data-id="<?= $newsItem['id'] ?>" name="submit" value="Добавить">
 									</div>
 									
 									
@@ -94,8 +94,6 @@
 											<span class="comment__info-date"><?= $comment['date'] ?></span>
 											<div class="comment__text"><?= $comment['user_comment'] ?></div>
 										</div>
-										
-
 									</div>
 								<?php endforeach ?>
 								
@@ -133,3 +131,35 @@
 		</div>
 	</div>
 </div>
+<?php include ROOT . '/views/layouts/footer.php'; ?>
+<script>
+    $(document).ready(function(){
+        $("#add_comment").click(function(e){
+            e.preventDefault();
+
+            var userComment = $("#user_comment").val();
+            var userName = $("#name").val();
+           	var id = this.getAttribute('data-id');
+
+            var postData = {'user_comment': userComment, 'name' : userName};
+
+            $.ajax({ 
+            	url: "/comment/addAjax/"+id,
+		     	data: postData,
+		     	type: 'post',
+		     	dataType:'html',
+		     	success: function(output) {
+		            var commentItem = JSON.parse(output);
+		            $('.comments__list').append('<div class="comment"><div class="comment__avatar"><img src="/template/images/users/no_image.jpeg" alt=""></div><div class="comment__info"><span class="comment__info-name">'+commentItem[0].name+'</span><span class="comment__info-date"> '+commentItem[0].date+'</span><div class="comment__text">'+commentItem[0].user_comment+'</div></div></div></div>');
+		            $("#user_comment").val('')
+		        },
+		      	error: function(request, status, error){
+		        	alert("Error: Could not delete");
+		      	}
+			});
+
+
+        })
+    })
+</script>
+
