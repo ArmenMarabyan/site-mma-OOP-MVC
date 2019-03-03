@@ -32,7 +32,7 @@
 	// 4. Вызов роутера
 
 	$router = new Router;
-	$router->run();
+	$router->dispatch();
 
 ?>
 
