@@ -2,7 +2,10 @@
 
 class UserController {
 	public function actionRegister() {
-		User::isAuthorized();
+
+		if(!User::isGuest()) {
+			header("Location: /cabinet");
+		}
 		$name = '';
 		$email = '';
 		$password = '';
@@ -46,7 +49,9 @@ class UserController {
 	}
 
 	public function actionLogin() {
-		User::isAuthorized();
+		if(!User::isGuest()) {
+			header("Location: /cabinet");
+		}
 		$email = '';
 		$password = '';
 		$errors = false;
@@ -74,7 +79,6 @@ class UserController {
 				header('Location: /cabinet/');
 			}
 		}
-
 		require_once(ROOT.'/views/user/login.php');
 	}
 

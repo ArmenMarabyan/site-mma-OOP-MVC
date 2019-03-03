@@ -102,13 +102,6 @@ class User {
 		header("Location: /login");
 	}
 
-	public static function isAuthorized() {
-		if(!isset($_SESSION['user'])) {
-			return false;
-		}
-		header("Location: /cabinet");
-	}
-
 	
 	public static function isGuest() {
 		if(isset($_SESSION['user'])) {

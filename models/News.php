@@ -15,7 +15,11 @@ class News {
 		if($id) {
 			$db = Db::getConnection();
 
-			$result = $db->query('SELECT * FROM news WHERE id = '.$id);
+            $sql = "SELECT * FROM news WHERE id = :id";
+
+            $result = $db->prepare($sql);
+            $result->bindParam(':id', $id,PDO::PARAM_INT);
+            $result->execute();
 			$result->setFetchMode(PDO::FETCH_ASSOC);
 
 			$newsItem = $result->fetch();
@@ -33,9 +37,12 @@ class News {
 		$db = Db::getConnection();
 
 		$newsList = array();
+        $sql = "SELECT * FROM news ORDER BY id DESC LIMIT :count OFFSET :offset";
 
-		$result = $db->query('SELECT * FROM news ORDER BY id DESC LIMIT '. $count . ' OFFSET '.$offset);
-
+        $result = $db->prepare($sql);
+        $result->bindParam(':count', $count, PDO::PARAM_INT);
+        $result->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $result->execute();
 		$i = 0;
 
 		while($row = $result->fetch()) {
@@ -152,14 +159,19 @@ class News {
 	public static function getSearchedNewsList($page, $query, $count = self::SHOW_BY_DEFAULT) {
 		$page = (int) $page;
 		$offset = ($page - 1) * self::SHOW_BY_DEFAULT;
-
+        $query = "%".$query."%";
 
 		$db = Db::getConnection();
 
 		$searchedNewsList = array();
 
-		$result = $db->query("SELECT * FROM news WHERE name LIKE '%$query%' OR short_description LIKE '%$query%' OR description LIKE '%$query%' OR source LIKE '%$query%' ORDER BY id DESC LIMIT ". $count . " OFFSET ".$offset);
+        $sql = "SELECT * FROM news WHERE name LIKE :query OR short_description LIKE :query OR description LIKE :query OR source LIKE :query ORDER BY id DESC LIMIT :count OFFSET :offset";
 
+        $result = $db->prepare($sql);
+        $result->bindParam(':count', $count, PDO::PARAM_INT);
+        $result->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $result->bindParam(':query', $query, PDO::PARAM_STR);
+        $result->execute();
 		$i = 0;
 
 		while($row = $result->fetch()) {

@@ -1,4 +1,4 @@
-<?php include ROOT . '/views/layouts/header.php'; ?>
+<?php require ROOT . '/views/layouts/header.php'; ?>
 <style>body::before {background-color: #eee !important;}body::after {width: 100% !important;}</style>
 <div class="row">
 	
@@ -131,7 +131,7 @@
 		</div>
 	</div>
 </div>
-<?php include ROOT . '/views/layouts/footer.php'; ?>
+<?php require ROOT . '/views/layouts/footer.php'; ?>
 <script>
     $(document).ready(function(){
         $("#add_comment").click(function(e){

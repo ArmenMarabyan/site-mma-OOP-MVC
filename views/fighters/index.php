@@ -1,4 +1,4 @@
-<?php include ROOT . '/views/layouts/header.php'; ?>
+<?php require_once ROOT . '/views/layouts/header.php'; ?>
 	<style>body::before {background-color: #eee !important;}body::after {width: 100% !important;}</style>
 	<div class="row">
 		<div class="col-lg-12 col-xs-12 content__main" >
@@ -35,4 +35,4 @@
 		</div>
 	</div>
 
-<?php include ROOT . '/views/layouts/footer.php'; ?>
+<?php require_once ROOT . '/views/layouts/footer.php'; ?>

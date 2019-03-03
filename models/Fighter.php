@@ -21,7 +21,12 @@ class Fighter {
 
 		$fightersList = array();
 		//запрос к бд
-		$result = $db->query('SELECT * FROM fighters ORDER BY id DESC LIMIT '.$count .' OFFSET '.$offset);
+        $sql = "SELECT * FROM fighters ORDER BY id DESC LIMIT :count OFFSET :offset";
+
+        $result = $db->prepare($sql);
+        $result->bindParam(':count', $count, PDO::PARAM_INT);
+        $result->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $result->execute();
 		// $i = 0;
 		$result->setFetchMode(PDO::FETCH_ASSOC);
 
@@ -45,7 +50,11 @@ class Fighter {
 		//подключение к бд
 		$db = Db::getConnection();
 		//запрс и возврат данных
-		$result = $db->query('SELECT * FROM fighters WHERE id = '.$id);
+        $sql = "SELECT * FROM fighters WHERE id = ?";
+
+        $result = $db->prepare($sql);
+        $result->execute([$id]);
+
 		$result->setFetchMode(PDO::FETCH_ASSOC);
 
 		$fighter = $result->fetch();
@@ -58,6 +67,7 @@ class Fighter {
 		//подключение к бд
 		$db = Db::getConnection();
 		//запрос
+
 		$result = $db->query('SELECT COUNT(id) AS count FROM fighters');
 
 		$result->setFetchMode(PDO::FETCH_ASSOC);
@@ -73,7 +83,10 @@ class Fighter {
 		$db = Db::getConnection();
 		$fightersList = array();
 		//запрос
-		$result = $db->query("SELECT * FROM fighters WHERE name LIKE '%$query%' ORDER BY id DESC");
+        $sql = "SELECT * FROM fighters WHERE name LIKE ? ORDER BY id DESC";
+
+        $result = $db->prepare($sql);
+        $result->execute(['%'.$query.'%']);
 
 		$i = 0;
 

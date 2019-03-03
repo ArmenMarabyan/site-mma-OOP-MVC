@@ -1,7 +1,7 @@
 <?php
-
+	
 	// front controller
-
+	
 	
 	// 1. общие настрокйи
 	
@@ -18,7 +18,6 @@
 		print_r($arr);
 		echo '</pre>';
 	}
-
 	
 
 // 	$uri = trim($_SERVER['REQUEST_URI'], '/');
@@ -34,5 +33,6 @@
 
 	$router = new Router;
 	$router->run();
- 
+
 ?>
+

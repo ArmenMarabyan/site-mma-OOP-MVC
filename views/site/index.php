@@ -1,4 +1,4 @@
-	<?php include ROOT . '/views/layouts/header.php'; ?>
+	<?php require_once ROOT . '/views/layouts/header.php'; ?>
 	
 
 	<div class="content">
@@ -209,4 +209,4 @@
 					</div>
 				</div>
 				
-				<?php include ROOT . '/views/layouts/footer.php'; ?>
+				<?php require_once ROOT . '/views/layouts/footer.php'; ?>

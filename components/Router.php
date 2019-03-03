@@ -17,7 +17,7 @@ class Router {
 
 
 	//Получаем uri который ввел пользователь
-	private function getURI() {
+	protected function getURI() {
 		if(!empty($_SERVER['REQUEST_URI'])) {
 			return trim($_SERVER['REQUEST_URI'], '/');
 		}
@@ -74,7 +74,7 @@ class Router {
 
 	}
 	// 404
-	public function ErrorPage404() {
+	protected function ErrorPage404() {
         $host = 'http://'.$_SERVER['HTTP_HOST'].'/';
         header('HTTP/1.1 404 Not Found');
 		header("Status: 404 Not Found");
