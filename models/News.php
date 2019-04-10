@@ -15,11 +15,7 @@ class News {
 		if($id) {
 			$db = Db::getConnection();
 
-            $sql = "SELECT * FROM news WHERE id = :id";
-
-            $result = $db->prepare($sql);
-            $result->bindParam(':id', $id,PDO::PARAM_INT);
-            $result->execute();
+			$result = $db->query('SELECT * FROM articles WHERE id = '.$id);
 			$result->setFetchMode(PDO::FETCH_ASSOC);
 
 			$newsItem = $result->fetch();
@@ -37,18 +33,15 @@ class News {
 		$db = Db::getConnection();
 
 		$newsList = array();
-        $sql = "SELECT * FROM news ORDER BY id DESC LIMIT :count OFFSET :offset";
 
-        $result = $db->prepare($sql);
-        $result->bindParam(':count', $count, PDO::PARAM_INT);
-        $result->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $result->execute();
+		$result = $db->query('SELECT * FROM articles ORDER BY id DESC LIMIT '. $count . ' OFFSET '.$offset);
+
 		$i = 0;
 
 		while($row = $result->fetch()) {
 			$newsList[$i]['id'] = $row['id'];
 			$newsList[$i]['name'] = $row['name'];
-			$newsList[$i]['date'] = $row['date'];
+			// $newsList[$i]['date'] = $row['date'];
 			$newsList[$i]['source'] = $row['source'];
 			$newsList[$i]['views'] = $row['views'];
 			$newsList[$i]['short_description'] = $row['short_description'];
@@ -67,7 +60,7 @@ class News {
 	public static function getMainArticle() {
 		$db = Db::getConnection();
 
-		$result = $db->query('SELECT * FROM news WHERE main_article = 1 ORDER BY id DESC');
+		$result = $db->query('SELECT * FROM articles WHERE main_article = 1 ORDER BY id DESC');
 
 		return $result->fetch();
 	}
@@ -80,7 +73,7 @@ class News {
 
 		$popularNewsList = array();
 
-		$result = $db->query('SELECT * FROM news ORDER BY views DESC LIMIT ' .$count);
+		$result = $db->query('SELECT * FROM articles ORDER BY views DESC LIMIT ' .$count);
 
 		$i = 0;
 
@@ -106,7 +99,7 @@ class News {
 		$db = Db::getConnection();
 
 		$latestNews = array();
-		$result = $db->query('SELECT id,name,image,views,alias FROM news ORDER BY id DESC LIMIT 3');
+		$result = $db->query('SELECT id,name,image,views,alias FROM articles ORDER BY id DESC LIMIT 3');
 
 		$i = 0;
 
@@ -130,7 +123,7 @@ class News {
 	public static function getTotalNews() {
 		$db = Db::getConnection();
 
-		$result = $db->query('SELECT COUNT(id) AS count FROM news');
+		$result = $db->query('SELECT COUNT(id) AS count FROM articles');
 
 		$result->setFetchMode(PDO::FETCH_ASSOC);
 		$row = $result->fetch();
@@ -145,7 +138,7 @@ class News {
 	public static function getTotalSearchedNews($query) {
 		$db = Db::getConnection();
 
-		$result = $db->query("SELECT COUNT(id) AS count FROM news WHERE name LIKE '%$query%' OR short_description LIKE '%$query%' OR description LIKE '%$query%' OR source LIKE '%$query%'");
+		$result = $db->query("SELECT COUNT(id) AS count FROM articles WHERE name LIKE '%$query%' OR short_description LIKE '%$query%' OR description LIKE '%$query%' OR source LIKE '%$query%'");
 
 		$result->setFetchMode(PDO::FETCH_ASSOC);
 		$row = $result->fetch();
@@ -159,19 +152,14 @@ class News {
 	public static function getSearchedNewsList($page, $query, $count = self::SHOW_BY_DEFAULT) {
 		$page = (int) $page;
 		$offset = ($page - 1) * self::SHOW_BY_DEFAULT;
-        $query = "%".$query."%";
+
 
 		$db = Db::getConnection();
 
 		$searchedNewsList = array();
 
-        $sql = "SELECT * FROM news WHERE name LIKE :query OR short_description LIKE :query OR description LIKE :query OR source LIKE :query ORDER BY id DESC LIMIT :count OFFSET :offset";
+		$result = $db->query("SELECT * FROM articles WHERE name LIKE '%$query%' OR short_description LIKE '%$query%' OR description LIKE '%$query%' OR source LIKE '%$query%' ORDER BY id DESC LIMIT ". $count . " OFFSET ".$offset);
 
-        $result = $db->prepare($sql);
-        $result->bindParam(':count', $count, PDO::PARAM_INT);
-        $result->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $result->bindParam(':query', $query, PDO::PARAM_STR);
-        $result->execute();
 		$i = 0;
 
 		while($row = $result->fetch()) {
@@ -200,7 +188,7 @@ class News {
 
 		$fighterNewsList = [];
 
-		$result = $db->query("SELECT * FROM news WHERE name LIKE '%$fighter_name%' OR short_description LIKE '%$fighter_name%' OR description LIKE '%$fighter_name%' ORDER BY id DESC LIMIT 3");
+		$result = $db->query("SELECT * FROM articles WHERE name LIKE '%$fighter_name%' OR short_description LIKE '%$fighter_name%' OR description LIKE '%$fighter_name%' ORDER BY id DESC LIMIT 3");
 		$i = 0;
 		while($row = $result->fetch()) {
 			$fighterNewsList[$i]['id'] = $row['id'];
@@ -220,7 +208,7 @@ class News {
 	public static function updateViewsCount($views, $id) {
 		$db = Db::getConnection();
 		$views++;
-		$sql = 'UPDATE news SET views = :views WHERE id = :id';
+		$sql = 'UPDATE articles SET views = :views WHERE id = :id';
 
 		$result = $db->prepare($sql);
 		$result->bindParam(':views', $views, PDO::PARAM_INT);
@@ -239,7 +227,7 @@ class News {
 	public static function createNews($opt) {
 		$db = Db::getConnection();
 
-		$sql = 'INSERT INTO news (name, short_description, description, main_article, source, meta_title, meta_description, meta_keyword) VALUES(:name, :short_description, :description, :main_article, :source, :meta_title, :meta_description, :meta_keyword)';
+		$sql = 'INSERT INTO articles (name, short_description, description, main_article, source, meta_title, meta_description, meta_keyword) VALUES(:name, :short_description, :description, :main_article, :source, :meta_title, :meta_description, :meta_keyword)';
 
 
 		//подготовленный запрос
@@ -268,7 +256,7 @@ class News {
 	public static function editNews($id, $opt) {
 		$db = Db::getConnection();
 
-		$sql = "UPDATE news SET name = :name, short_description = :short_description, description = :description, main_article = :main_article, source = :source, meta_title = :meta_title, meta_description = :meta_description, meta_keyword = :meta_keyword WHERE id = :id";
+		$sql = "UPDATE articles SET name = :name, short_description = :short_description, description = :description, main_article = :main_article, source = :source, meta_title = :meta_title, meta_description = :meta_description, meta_keyword = :meta_keyword WHERE id = :id";
 
 		$result = $db->prepare($sql);
 		$result->bindParam(':id', $id, PDO::PARAM_STR);
@@ -292,7 +280,7 @@ class News {
 	public static function deleteNewsById($id) {
 		$db = Db::getConnection();
 
-		$sql = 'DELETE FROM news WHERE id = :id';
+		$sql = 'DELETE FROM articles WHERE id = :id';
 
 		$result = $db->prepare($sql);
 		$result->bindParam(':id', $id, PDO::PARAM_INT);

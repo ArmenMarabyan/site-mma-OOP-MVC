@@ -26,10 +26,7 @@ class Router {
 	//code
 
 
-    /**
-     * Ищем совпадения
-     * @return bool
-     */
+	//запускаем роутер
 	public function matchRoute() {
 		//uri который ввел пользователь	
 		$uri = $this->getURI();
@@ -48,13 +45,16 @@ class Router {
                 $this->route = $internalRoute;
 
                 return true;
+
 			}
 		}
+
 		return false;
+
 	}
 
     /**
-     * запускаем роутер
+     *
      */
 	public function dispatch() {
         if($this->matchRoute()) {

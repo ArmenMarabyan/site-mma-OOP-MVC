@@ -1,6 +1,0 @@
-1. likes
-2. vk api
-3. images in admin panel
-4. search and pagination
-5. comments
-6. footer

@@ -2,7 +2,7 @@
 
 return array(
 	'host' => 'localhost',
-	'dbname' => 'mma_site',
-	'user' => 'mybd_user',
-	'password' => 'newAdmin123',
+	'dbname' => 'site-mma',
+	'user' => 'root',
+	'password' => '',
 );
